@@ -37,13 +37,30 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "DetailsSegue" {
+            let cell = sender as! PhotoCell
+            if let indexPath = tableView.indexPath(for: cell){
+                let detailsController = segue.destination as! DetailsViewController
+                detailsController.incomingImage = cell.photoView.image!
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
+        }
+    }
+    
+    //only need one row because the info tag and picture are both in one cell
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    //each section contains info tag and picture in one cell
+    func numberOfSections(in tableView: UITableView) -> Int {
         return posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell") as! PhotoCell
-        let post = posts[indexPath.row]
+        let post = posts[indexPath.section]
         
         if let photos = post["photos"] as? [[String: Any]] {
         
@@ -57,22 +74,46 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             cell.photoView.af_setImage(withURL: url!)
             
-
         }
         
         return cell
-        
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
+        headerView.backgroundColor = UIColor(white: 1, alpha: 0.9)
 
-    /*
-    // MARK: - Navigation
+        let profileView = UIImageView(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
+        profileView.clipsToBounds = true
+        profileView.layer.cornerRadius = 15;
+        profileView.layer.borderColor = UIColor(white: 0.7, alpha: 0.8).cgColor
+        profileView.layer.borderWidth = 1;
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        // Set the avatar
+        profileView.af_setImage(withURL: URL(string: "https://api.tumblr.com/v2/blog/humansofnewyork.tumblr.com/avatar")!)
+        headerView.addSubview(profileView)
+
+        let label = UILabel(frame: CGRect(x: 50, y: 5, width: 260, height: 45))
+        label.textAlignment = NSTextAlignment.left
+        let post = posts[section]
+        
+        if let blogName = post["blog_name"] as? String {
+            label.text = blogName
+        }
+        headerView.addSubview(label)
+
+        
+        let timeStamp = UILabel(frame: CGRect(x: 300, y: 5, width: 60, height: 45))
+        let rawDate = post["date"] as! String
+        let tumblrDateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
+        timeStamp.textAlignment = NSTextAlignment.right
+        timeStamp.text =  dateHelper().getSimpleDate(rawDateString: rawDate, format: tumblrDateFormat)
+        timeStamp.adjustsFontSizeToFitWidth = true
+        
+        headerView.addSubview(timeStamp)
+        return headerView
     }
-    */
-
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
 }

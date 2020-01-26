@@ -2,8 +2,8 @@
 //  PhotoCell.swift
 //  TumblrLab
 //
-//  Created by Hermain Hanif on 4/11/19.
-//  Copyright © 2019 Lily Pham. All rights reserved.
+//  Created by Derek Chang on 1/25/20.
+//  Copyright © 2019 Derek Chang. All rights reserved.
 //
 
 import UIKit
