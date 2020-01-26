@@ -3,7 +3,7 @@
 //  TumblrLab
 //
 //  Created by Derek Chang on 1/25/20.
-//  Copyright © 2020 Lily Pham. All rights reserved.
+//  Copyright © 2020 Derek Chang. All rights reserved.
 //
 import Foundation
 

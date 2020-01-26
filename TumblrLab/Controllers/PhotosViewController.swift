@@ -2,8 +2,8 @@
 //  PhotosViewController.swift
 //  TumblrLab
 //
-//  Created by Lily Pham on 4/7/19.
-//  Copyright © 2019 Lily Pham. All rights reserved.
+//  Created by Derek Chang on 1/25/20.
+//  Copyright © 2019 Derek Chang. All rights reserved.
 //
 
 import UIKit
@@ -79,6 +79,8 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return cell
     }
     
+    
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
         headerView.backgroundColor = UIColor(white: 1, alpha: 0.9)
@@ -93,6 +95,7 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         profileView.af_setImage(withURL: URL(string: "https://api.tumblr.com/v2/blog/humansofnewyork.tumblr.com/avatar")!)
         headerView.addSubview(profileView)
 
+        //Set the title of the blog
         let label = UILabel(frame: CGRect(x: 50, y: 5, width: 260, height: 45))
         label.textAlignment = NSTextAlignment.left
         let post = posts[section]
@@ -103,17 +106,32 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         headerView.addSubview(label)
 
         
-        let timeStamp = UILabel(frame: CGRect(x: 300, y: 5, width: 60, height: 45))
+        return headerView
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
+        footerView.backgroundColor = UIColor(white: 1, alpha: 0.9)
+        
+        let post = posts[section]
+        //set the timestamp
+        let timeStamp = UILabel(frame: CGRect(x: 10, y: 5, width: 60, height: 45))
         let rawDate = post["date"] as! String
         let tumblrDateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
-        timeStamp.textAlignment = NSTextAlignment.right
+        timeStamp.textAlignment = NSTextAlignment.left
         timeStamp.text =  dateHelper().getSimpleDate(rawDateString: rawDate, format: tumblrDateFormat)
         timeStamp.adjustsFontSizeToFitWidth = true
         
-        headerView.addSubview(timeStamp)
-        return headerView
+        footerView.addSubview(timeStamp)
+        
+        return footerView
     }
+    
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 50
     }
 }
